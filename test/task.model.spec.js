@@ -104,7 +104,7 @@ describe('Task', function () {
 
     describe('completeAll', function(){
 
-      xit('marks all incomplete tasks as completed', function(){
+      it('marks all incomplete tasks as completed', function(){
         return Task.completeAll()
           .then(function() {
             return Task.findAll({ where: { complete: false } });
@@ -137,7 +137,7 @@ describe('Task', function () {
 
     describe('addChild', function() {
 
-      xit('should return a promise for the new child', function() {
+      it('should return a promise for the new child', function() {
         return task.addChild({ name: 'task2' })
         .then(function(child) {
           expect(child.name).to.equal('task2');

@@ -20,8 +20,7 @@ var Task = db.define('Task', {
     defaultValue: false
   },
   due: Sequelize.DATE
-  },
-  {
+  }, {
     getterMethods: {
       timeRemaining(){
         if (!this.due){
@@ -44,6 +43,57 @@ var Task = db.define('Task', {
 );
 
 // class methods
+Task.clearCompleted = () => {
+  return Task.destroy({
+    where: {
+      complete: true
+    }
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+}
+
+Task.completeAll = () => {
+  return Task.update({ complete: 'true' }, {
+    where: {
+      complete: false
+    }
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+}
+
+
+//instance methods
+// Task.prototype.addChild = (fields) => {
+
+//   return Task.create(fields)
+//     .then((results) => {
+//       // console.log(results.parentId)
+//       return results.setParent(this);
+//       // return results
+//     })
+//     .catch((err) => {
+//       console.log(err)
+//     })
+//     // .then((results) => {
+//     //   // console.log(results)
+//     //   return results
+//     // })
+// }
+
+Task.prototype.addChild = function (fields) {
+    return Task.create(fields)
+    .then((results) => {
+      results.setParent(this)
+      return results
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 
 
 
