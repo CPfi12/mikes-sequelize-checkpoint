@@ -20,8 +20,30 @@ var Task = db.define('Task', {
     defaultValue: false
   },
   due: Sequelize.DATE
-});
+  },
+  {
+    getterMethods: {
+      timeRemaining(){
+        if (!this.due){
+          return Infinity
+        } else {
+          return this.due - new Date().getTime() //due - current time in ms
+        }
+      },
+      overdue() {
+        if (this.timeRemaining < 0 && !this.complete){
+          return true
+        } else {
+          //all other cases, such as date in future,
+          //past due but complete, or simply complete
+          return false
+        }
+      }
+    }
+  }
+);
 
+// class methods
 
 
 
