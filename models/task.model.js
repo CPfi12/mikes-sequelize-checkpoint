@@ -65,25 +65,7 @@ Task.completeAll = () => {
   })
 }
 
-
 //instance methods
-// Task.prototype.addChild = (fields) => {
-
-//   return Task.create(fields)
-//     .then((results) => {
-//       // console.log(results.parentId)
-//       return results.setParent(this);
-//       // return results
-//     })
-//     .catch((err) => {
-//       console.log(err)
-//     })
-//     // .then((results) => {
-//     //   // console.log(results)
-//     //   return results
-//     // })
-// }
-
 Task.prototype.addChild = function (fields) {
     return Task.create(fields)
     .then((results) => {
@@ -95,7 +77,35 @@ Task.prototype.addChild = function (fields) {
     })
 }
 
+Task.prototype.getChildren = function() {
+  //not 100% sure why this method isn't working... will come back
+  return Task.findAll({
+    include: [{association: 'parent', where: { parentId: this.id }}]
+  }).then((results) => {
+    return results
+  })
+}
 
+Task.prototype.getSiblings = function(){
+  return Task.findAll({
+    where: {
+      parentId: this.parentId
+    }
+  }).then(function(results){
+    // console.log(results)
+    return results
+  })
+}
+
+//hook
+Task.beforeDestroy(function(page) {
+  let children = page.getChildren();
+  if (children){
+    children.forEach((elem) => {
+      elem.destroy()
+    })
+  }
+})
 
 //---------^^^---------  your code above  ---------^^^----------
 
