@@ -66,49 +66,51 @@ Task.completeAll = () => {
 }
 
 //instance methods
+// results.setParent returns a promise, so we need to add a .then after 
+// to resolve that promise and actually set the parent in the db 
 Task.prototype.addChild = function (fields) {
    let current = this
     return Task.create(fields)
     .then((results) => {
-      results.setParent(current)
-      console.log('RESULTS****')
-      console.log(results)
-      return results
+      return results.setParent(current);
     })
-    .catch((err) => {
-      console.log(err)
+    .then((res)=>{
+      return res;
     })
+    .catch(console.err)
 }
 
+
+//same as your code but I cleaned it up a little
 Task.prototype.getChildren = function() {
-  //not 100% sure why this method isn't working... will come back
   let current = this
-  // console.log(this.id)
-  return Task.findAll({
-    // include: [{association: 'parent', where: { parentId: this.id }}]
-    // where: {
-    //   parentId: current.id
-    // }
-  }).
-  then((results) => {
-    console.log('!!!!!!')
-    console.log(results)
+  return Task.findAll({ 
+    where: {
+       parentId: current.id
+    }
   })
+  .catch(console.err)
+  
 }
 
+// You can use $ne to get only tasks that have an id that does not match
+// the current tasks id
 Task.prototype.getSiblings = function(){
   return Task.findAll({
     where: {
-      parentId: this.parentId
+      parentId: this.parentId,
+      id: {
+        $ne: this.id
+      }
     }
   }).then(function(results){
-    // console.log(results)
     return results
   })
 }
 
 //hook
 Task.beforeDestroy(function(page) {
+
   let children = page.getChildren();
   if (children){
     children.forEach((elem) => {

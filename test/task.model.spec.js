@@ -140,6 +140,8 @@ describe('Task', function () {
       it('should return a promise for the new child', function() {
         return task.addChild({ name: 'task2' })
         .then(function(child) {
+          //console.log('TASK', task);
+          //console.log('CHILD', child)
           expect(child.name).to.equal('task2');
           expect(child.parentId).to.equal(task.id);
         });
@@ -191,7 +193,7 @@ describe('Task', function () {
   });
 
 
-  describe('a `pre` destroy hook', function(){
+  xdescribe('a `pre` destroy hook', function(){
 
     var studyTask;
     beforeEach(function(){
@@ -220,7 +222,7 @@ describe('Task', function () {
 
     describe('removal', function(){
 
-      xit('also removes all child tasks', function(){
+      it('also removes all child tasks', function(){
         return studyTask.destroy()
         .then(function(){
           return Task.findAll();
