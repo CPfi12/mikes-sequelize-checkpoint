@@ -67,9 +67,12 @@ Task.completeAll = () => {
 
 //instance methods
 Task.prototype.addChild = function (fields) {
+   let current = this
     return Task.create(fields)
     .then((results) => {
-      results.setParent(this)
+      results.setParent(current)
+      console.log('RESULTS****')
+      console.log(results)
       return results
     })
     .catch((err) => {
@@ -79,10 +82,17 @@ Task.prototype.addChild = function (fields) {
 
 Task.prototype.getChildren = function() {
   //not 100% sure why this method isn't working... will come back
+  let current = this
+  // console.log(this.id)
   return Task.findAll({
-    include: [{association: 'parent', where: { parentId: this.id }}]
-  }).then((results) => {
-    return results
+    // include: [{association: 'parent', where: { parentId: this.id }}]
+    // where: {
+    //   parentId: current.id
+    // }
+  }).
+  then((results) => {
+    console.log('!!!!!!')
+    console.log(results)
   })
 }
 
