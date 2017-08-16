@@ -66,16 +66,13 @@ Task.completeAll = () => {
 }
 
 //instance methods
-// results.setParent returns a promise, so we need to add a .then after 
-// to resolve that promise and actually set the parent in the db 
+// results.setParent returns a promise, so we need need to explicitly return 
+// results.setParent(current) 
 Task.prototype.addChild = function (fields) {
    let current = this
     return Task.create(fields)
     .then((results) => {
       return results.setParent(current);
-    })
-    .then((res)=>{
-      return res;
     })
     .catch(console.err)
 }
@@ -103,8 +100,6 @@ Task.prototype.getSiblings = function(){
         $ne: this.id
       }
     }
-  }).then(function(results){
-    return results
   })
 }
 
